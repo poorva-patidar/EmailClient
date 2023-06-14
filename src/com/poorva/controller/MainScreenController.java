@@ -53,6 +53,11 @@ public class MainScreenController extends BaseController implements Initializabl
     }
 
     @FXML
+    void closeMenuItemAction() {
+        viewFactory.closeAllStages();
+    }
+
+    @FXML
     void optionsAction() {
         viewFactory.showOptionsScreen();
     }

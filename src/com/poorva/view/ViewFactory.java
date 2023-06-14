@@ -95,6 +95,12 @@ public class ViewFactory {
         activeStages.remove(stageToClose);
     }
 
+    public void closeAllStages(){
+        for (Stage activeStage: activeStages) {
+            activeStage.close();
+        }
+    }
+
     public void updateAllStyles() {
         for(Stage stage: activeStages){
             Scene scene = stage.getScene();
