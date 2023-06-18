@@ -14,7 +14,7 @@ public class PersistenceAccess {
             FileInputStream fileInputStream = new FileInputStream(VALID_ACCOUNTS_LOCATION);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             List<ValidAccount> persistedList = (List<ValidAccount>) objectInputStream.readObject();
-            //decodePasswords(persistedList);
+            decodePasswords(persistedList);
             resultList.addAll(persistedList);
         } catch (Exception e){
             e.printStackTrace();
