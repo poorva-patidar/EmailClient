@@ -80,7 +80,7 @@ public class LoginSceneController extends BaseController implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        emailAddressField.setText("poorva24cs078@satiengg.in");
-        passwordField.setText("mayagovind@07");
+        emailAddressField.setText("");
+        passwordField.setText("");
     }
 }
