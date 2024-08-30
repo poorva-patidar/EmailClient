@@ -1,0 +1,86 @@
+package com.poorva.controller;
+
+import com.poorva.EmailManager;
+import com.poorva.controller.services.LoginService;
+import com.poorva.model.EmailAccount;
+import com.poorva.view.ViewFactory;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class LoginSceneController extends BaseController implements Initializable {
+    @FXML
+    private TextField emailAddressField;
+
+    @FXML
+    private Label errorLabel;
+
+    @FXML
+    private PasswordField passwordField;
+
+    public LoginSceneController(EmailManager emailManager, ViewFactory viewFactory, String fxmlName) {
+        super(emailManager, viewFactory, fxmlName);
+    }
+
+    @FXML
+    void loginButtonAction() {
+        if(fieldsAreValid()) {
+            EmailAccount emailAccount = new EmailAccount(emailAddressField.getText(), passwordField.getText());
+            LoginService loginService = new LoginService(emailAccount, emailManager);
+            loginService.start(); // start background task
+            loginService.setOnSucceeded(event -> {
+                EmailLoginResult emailLoginResult = loginService.getValue(); //saving the email login result
+
+                //switch to handle different scenarios
+                switch (emailLoginResult) {
+                    case SUCCESS:
+                        if (!viewFactory.isMainViewInitialized()) {
+                            viewFactory.showMainScreen();
+                        }
+                        //We need the stage to close the stage
+                        Stage stage = (Stage) errorLabel.getScene().getWindow();
+                        viewFactory.closeStage(stage);
+                        return;
+
+                    case FAILED_BY_CREDENTIALS:
+                        errorLabel.setText("Invalid Credentials!");
+                        return;
+
+                    case FAILED_BY_UNEXPECTED_ERROR:
+                        errorLabel.setText("Unexpected Error!");
+                        return;
+
+                    default:
+                        return;
+                }
+            });
+        }
+    }
+
+    private boolean fieldsAreValid() {
+        if(emailAddressField.getText().isEmpty()){
+            errorLabel.setText("Please fill email address");
+            return false;
+        }
+
+        if(passwordField.getText().isEmpty()){
+            errorLabel.setText("Please fill password");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        emailAddressField.setText("");
+        passwordField.setText("");
+    }
+}
